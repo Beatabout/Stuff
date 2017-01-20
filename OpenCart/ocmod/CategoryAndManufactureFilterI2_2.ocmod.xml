@@ -1,9 +1,9 @@
 <modification>
-	<name>Filter Category and Manufacturer for Admin</name>
-	<version>2.2</version>
-	<link>http://opencart-russia.ru</link>
-	<author>Andrey Kozlov</author>
-    <code>FilterCategoryAndManufacturer</code>
+	<name>Category and Manufacturer filter for Admin</name>
+	<version>for Opencart 2.1</version>
+	<link>http://nosite</link>
+	<author>Mark Pulman</author>
+    <code>CategoryAndManufacturerFilter</code>
     <file path="admin/language/russian/catalog/product.php">	
 		<operation>
 			<search><![CDATA[
