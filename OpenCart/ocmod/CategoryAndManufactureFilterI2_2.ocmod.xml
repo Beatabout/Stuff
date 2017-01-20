@@ -73,8 +73,6 @@
                 ]]>
             </search>
 			<add position="before"><![CDATA[
-                'p2c.product_id',
-                'p.manufacturer_id',
 				'p.product_id',
                 ]]>
             </add>
@@ -177,9 +175,7 @@
                 $data['sort_model'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
                 ]]>
             </search>
-			<add position="before"><![CDATA[
-                $data['sort_manufacturer'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.manufacturer_id' . $url, true);
-                $data['sort_category'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p2c.product_id' . $url, true);						
+			<add position="before"><![CDATA[						
                 $data['sort_product_id'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, true);
 				]]>
             </add>
@@ -323,16 +319,6 @@
             ]]>
             </search>
             <add position="before"><![CDATA[
-                <td class="text-right"><?php if ($sort == 'p2c.product_id') { ?>
-                    <a href="<?php echo $sort_category; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_category; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_category; ?>"><?php echo $column_category; ?></a>
-                    <?php } ?></td>
-                <td class="text-right"><?php if ($sort == 'p.manufacturer_id') { ?>
-                    <a href="<?php echo $sort_manufacturer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_manufacturer; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_manufacturer; ?>"><?php echo $column_manufacturer; ?></a>
-                    <?php } ?></td>
 				<td class="text-right"><?php if ($sort == 'p.product_id') { ?>
                     <a href="<?php echo $sort_product_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product_id; ?></a>
                     <?php } else { ?>
@@ -347,10 +333,7 @@
             ]]>
             </search>
             <add position="before"><![CDATA[
-                <td class="text-left"><?php echo $product['category']; ?></td>
-                <td class="text-left"><?php if ($product['manufacturer']) {
-                    echo $product['manufacturer']['name']; }?></td>
-				<td class="text-left"><?php if ($product['product_id']) {
+                <td class="text-left"><?php if ($product['product_id']) {
                     echo $product['product_id']; }?></td>
                 ]]>
             </add>
