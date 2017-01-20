@@ -1,0 +1,359 @@
+<modification>
+	<name>Filter Category and Manufacturer for Admin</name>
+	<version>2.2</version>
+	<link>http://opencart-russia.ru</link>
+	<author>Andrey Kozlov</author>
+    <code>FilterCategoryAndManufacturer</code>
+    <file path="admin/language/russian/catalog/product.php">	
+		<operation>
+			<search><![CDATA[
+                'column_model' => 'Модель',
+                ]]>
+            </search>
+			<add  position="after"><![CDATA[
+                'column_category' => 'Категория',
+                'column_manufacturer' => 'Производитель',
+				'column_product_id' => 'ID',
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                'entry_model' => 'Модель',
+                ]]>
+            </search>
+			<add  position="after"><![CDATA[
+                'entry_category_f' => 'Категория',
+                'entry_manufacturer_f' => 'Производитель',
+                ]]>
+            </add>
+		</operation>
+	</file>
+    
+    <file path="admin/model/catalog/product.php">
+        <operation>
+			<search><![CDATA[
+                $sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+                ]]>
+            </search>
+			<add position="replace"><![CDATA[
+                $sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                $sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+                ]]>
+            </search>
+			<add position="replace"><![CDATA[
+                $sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                if (!empty($data['filter_model'])) {
+                ]]>
+            </search>
+			<add position="before"><![CDATA[			
+        if (isset($data['filter_category_id']) && !is_null($data['filter_category_id'])) {
+			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
+		}
+        
+        if (isset($data['filter_manufacturer_id']) && !is_null($data['filter_manufacturer_id'])) {
+			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
+		}
+                ]]>
+            </add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+                'p.model',
+                ]]>
+            </search>
+			<add position="before"><![CDATA[
+                'p2c.product_id',
+                'p.manufacturer_id',
+				'p.product_id',
+                ]]>
+            </add>
+		</operation>
+    </file>	
+    <file path="admin/controller/catalog/product.php">		
+		<operation>
+			<search index="4"><![CDATA[
+                if (isset($this->request->get['filter_model'])) {
+                ]]>
+            </search>
+			<add position="before"><![CDATA[			
+                if (isset($this->request->get['filter_category'])) {
+                    $filter_category = $this->request->get['filter_category'];
+                    $filter_category_id = $this->request->get['filter_category_id'];
+                } else {
+                    $filter_category = null;
+                    $filter_category_id = null;
+                }
+                if (isset($this->request->get['filter_manufacturer'])) {
+                    $filter_manufacturer = $this->request->get['filter_manufacturer'];
+                    if (isset($this->request->get['filter_manufacturer_id'])) {
+						$filter_manufacturer_id = $this->request->get['filter_manufacturer_id'];
+					} else {
+						$filter_manufacturer_id = null;
+					}	
+                } else {
+                    $filter_manufacturer = null;
+                    $filter_manufacturer_id = null;
+                }
+                ]]>
+            </add>
+		</operation>
+		<operation>
+			<search index="0,1,2,3,5,6,7,8"><![CDATA[
+                if (isset($this->request->get['filter_model'])) {
+                ]]>
+            </search>
+			<add  position="before"><![CDATA[
+                if (isset($this->request->get['filter_category'])) {
+                    $url .= '&filter_category=' . $this->request->get['filter_category'] . '&filter_category_id=' . $this->request->get['filter_category_id'] . '&filter_sub_category=true';
+                }
+                if (isset($this->request->get['filter_manufacturer'])) {
+                    $url .= '&filter_manufacturer=' . $this->request->get['filter_manufacturer'] . '&filter_manufacturer_id=' . $this->request->get['filter_manufacturer_id'];
+                }
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                'filter_model'	  => $filter_model,
+                ]]>
+            </search>
+			<add position="after"><![CDATA[			
+                'filter_category'	  => $filter_category,
+                'filter_category_id'	  => $filter_category_id,
+                'filter_manufacturer'	  => $filter_manufacturer,
+                'filter_manufacturer_id'	  => $filter_manufacturer_id,
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                $data['filter_model'] = $filter_model;
+                ]]>
+            </search>
+			<add position="after"><![CDATA[			
+                $data['filter_category'] = $filter_category;
+                $data['filter_category_id'] = $filter_category_id;
+                $data['filter_manufacturer'] = $filter_manufacturer;
+                $data['filter_manufacturer_id'] = $filter_manufacturer_id;
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                data['column_model'] = $this->language->get('column_model');
+                ]]>
+            </search>
+			<add position="after"><![CDATA[
+                $data['column_category'] = $this->language->get('column_category');
+                $data['column_manufacturer'] = $this->language->get('column_manufacturer');
+				$data['column_product_id'] = $this->language->get('column_product_id');
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                $data['entry_model'] = $this->language->get('entry_model');
+                ]]>
+            </search>
+			<add position="after"><![CDATA[
+                $data['entry_category_f'] = $this->language->get('entry_category_f');
+                $data['entry_manufacturer_f'] = $this->language->get('entry_manufacturer_f');
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                $data['sort_model'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, true);
+                ]]>
+            </search>
+			<add position="before"><![CDATA[
+                $data['sort_manufacturer'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.manufacturer_id' . $url, true);
+                $data['sort_category'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p2c.product_id' . $url, true);						
+                $data['sort_product_id'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, true);
+				]]>
+            </add>
+		</operation>
+        <operation>
+			<search><![CDATA[
+                $data['products'][] = array(
+                ]]>
+            </search>
+			<add position="before"><![CDATA[
+                $this->load->model('catalog/category');
+                $this->load->model('catalog/manufacturer');
+                $categories = $this->model_catalog_product->getProductCategories($result['product_id']);
+                if ($categories) {
+                    foreach ($categories as $category_id) {
+                        $category_info = $this->model_catalog_category->getCategory($category_id);
+                        if ($category_info) {
+                            $category = ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name'];
+                        }
+                    } 
+                } else { 
+                    $category = " "; 
+                }
+                ]]>
+            </add>
+		</operation>
+        <operation>
+			<search index="0"><![CDATA[
+                'model'      => $result['model'],
+                ]]>
+            </search>
+			<add position="after"><![CDATA[
+                'category' => $category,
+                'manufacturer'      => $this->model_catalog_manufacturer->getManufacturer($result['manufacturer_id']),
+                ]]>
+            </add>
+		</operation>
+    </file>
+    <file path="admin/view/template/catalog/product_list.tpl">
+        <operation>
+            <search><![CDATA[
+                <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+                ]]>
+            </search>
+            <add position="before"><![CDATA[
+                <div class="form-group">
+                    <label class="control-label" for="input-category"><?php echo $entry_category_f; ?></label>
+                    <input type="text" name="filter_category" value="<?php echo $filter_category; ?>" placeholder="<?php echo $entry_category_f; ?>" id="input-category" class="form-control" />
+                    <input type="hidden" name="filter_category_id" value="<?php echo $filter_category_id; ?>" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="input-manufacturer"><?php echo $entry_manufacturer_f; ?></label>
+                    <input type="text" name="filter_manufacturer" value="<?php echo $filter_manufacturer; ?>" placeholder="<?php echo $entry_manufacturer_f; ?>" id="input-manufacturer" class="form-control" />
+                    <input type="hidden" name="filter_manufacturer_id" value="<?php echo $filter_manufacturer_id; ?>" />
+                </div>
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+                var filter_model = $('input[name=\'filter_model\']').val();
+                ]]>
+            </search>
+            <add position="before"><![CDATA[
+    var filter_manufacturer = $('input[name=\'filter_manufacturer\']').val();
+
+        if (filter_manufacturer) {
+            url += '&filter_manufacturer=' + encodeURIComponent(filter_manufacturer);
+        }
+    var filter_manufacturer_id = $('input[name=\'filter_manufacturer_id\']').val();
+
+        if (filter_manufacturer) {
+            url += '&filter_manufacturer_id=' + encodeURIComponent(filter_manufacturer_id);
+        }    
+
+    var filter_category = $('input[name=\'filter_category\']').val();
+
+        if (filter_category) {
+            url += '&filter_category=' + encodeURIComponent(filter_category);
+        }
+    var filter_category_id = $('input[name=\'filter_category_id\']').val();
+
+        if (filter_category_id) {
+            url += '&filter_category_id=' + encodeURIComponent(filter_category_id);
+        }        
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+                //--></script></div>
+                ]]>
+            </search>
+            <add position="before"><![CDATA[
+$('input[name=\'filter_manufacturer\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',			
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['manufacturer_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_manufacturer\']').val(item['label']);
+        $('input[name=\'filter_manufacturer_id\']').val(item['value']);
+	}	
+});
+$('input[name=\'filter_category\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',			
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['category_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_category\']').val(item['label']);
+        $('input[name=\'filter_category_id\']').val(item['value']);
+	}
+});
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+                <td class="text-right"><?php if ($sort == 'p.quantity') { ?>
+            ]]>
+            </search>
+            <add position="before"><![CDATA[
+                <td class="text-right"><?php if ($sort == 'p2c.product_id') { ?>
+                    <a href="<?php echo $sort_category; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_category; ?></a>
+                    <?php } else { ?>
+                    <a href="<?php echo $sort_category; ?>"><?php echo $column_category; ?></a>
+                    <?php } ?></td>
+                <td class="text-right"><?php if ($sort == 'p.manufacturer_id') { ?>
+                    <a href="<?php echo $sort_manufacturer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_manufacturer; ?></a>
+                    <?php } else { ?>
+                    <a href="<?php echo $sort_manufacturer; ?>"><?php echo $column_manufacturer; ?></a>
+                    <?php } ?></td>
+				<td class="text-right"><?php if ($sort == 'p.product_id') { ?>
+                    <a href="<?php echo $sort_product_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product_id; ?></a>
+                    <?php } else { ?>
+                    <a href="<?php echo $sort_product_id; ?>"><?php echo $column_product_id; ?></a>
+                    <?php } ?></td>
+                ]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+                <td class="text-right"><?php if ($product['quantity'] <= 0) { ?>
+            ]]>
+            </search>
+            <add position="before"><![CDATA[
+                <td class="text-left"><?php echo $product['category']; ?></td>
+                <td class="text-left"><?php if ($product['manufacturer']) {
+                    echo $product['manufacturer']['name']; }?></td>
+				<td class="text-left"><?php if ($product['product_id']) {
+                    echo $product['product_id']; }?></td>
+                ]]>
+            </add>
+        </operation>
+	</file>
+</modification>
