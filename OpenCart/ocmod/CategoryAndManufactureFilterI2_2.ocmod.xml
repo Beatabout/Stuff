@@ -274,46 +274,46 @@
                 ]]>
             </search>
             <add position="before"><![CDATA[
-$('input[name=\'filter_manufacturer\']').autocomplete({
-	'source': function(request, response) {
-		$.ajax({
-			url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-			dataType: 'json',			
-			success: function(json) {
-				response($.map(json, function(item) {
-					return {
-						label: item['name'],
-						value: item['manufacturer_id']
-					}
-				}));
-			}
-		});
-	},
-	'select': function(item) {
-		$('input[name=\'filter_manufacturer\']').val(item['label']);
-        $('input[name=\'filter_manufacturer_id\']').val(item['value']);
-	}	
-});
-$('input[name=\'filter_category\']').autocomplete({
-	'source': function(request, response) {
-		$.ajax({
-			url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-			dataType: 'json',			
-			success: function(json) {
-				response($.map(json, function(item) {
-					return {
-						label: item['name'],
-						value: item['category_id']
-					}
-				}));
-			}
-		});
-	},
-	'select': function(item) {
-		$('input[name=\'filter_category\']').val(item['label']);
-        $('input[name=\'filter_category_id\']').val(item['value']);
-	}
-});
+                $('input[name=\'filter_manufacturer\']').autocomplete({
+                	'source': function(request, response) {
+                		$.ajax({
+                			url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+                			dataType: 'json',			
+                			success: function(json) {
+                				response($.map(json, function(item) {
+                					return {
+                						label: item['name'],
+                						value: item['manufacturer_id']
+                					}
+                				}));
+                			}
+                		});
+                	},
+                	'select': function(item) {
+                		$('input[name=\'filter_manufacturer\']').val(item['label']);
+                        $('input[name=\'filter_manufacturer_id\']').val(item['value']);
+                	}	
+                });
+                $('input[name=\'filter_category\']').autocomplete({
+                	'source': function(request, response) {
+                		$.ajax({
+                			url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+                			dataType: 'json',			
+                			success: function(json) {
+                				response($.map(json, function(item) {
+                					return {
+                						label: item['name'],
+                						value: item['category_id']
+                					}
+                				}));
+                			}
+                		});
+                	},
+                	'select': function(item) {
+                		$('input[name=\'filter_category\']').val(item['label']);
+                        $('input[name=\'filter_category_id\']').val(item['value']);
+                	}
+                });
                 ]]>
             </add>
         </operation>
