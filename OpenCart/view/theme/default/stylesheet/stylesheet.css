@@ -767,7 +767,7 @@ ul.sdt_menu a{
 ul.sdt_menu li{
 	float:left;
 	width:170px;
-	height:85px;
+	height:95px;
 	position:relative;
 	cursor:pointer;
 }
@@ -776,7 +776,7 @@ ul.sdt_menu li > a{
 	top:0px;
 	left:0px;
 	width:170px;
-	height:85px;
+	height:95px;
 	z-index:12;
 	background:transparent url(../image/overlay.png) no-repeat bottom right;
 }
@@ -803,7 +803,7 @@ ul.sdt_menu li span.sdt_wrap{
 ul.sdt_menu li span.sdt_active{
 	position:absolute;
 	background:#111;
-	top:85px;
+	top:95px;
 	width:170px;
 	height:0px;
 	left:0px;
@@ -837,9 +837,9 @@ ul.sdt_menu li div.sdt_box{
 	display:block;
 	position:absolute;
 	min-width:170px;
-	overflow:hidden;
-	height:170px;
-	top:85px;
+	overflow:visible;
+	min-height:170px;
+	top:95px;
 	left:0px;
 	display:none;
 	background:#000;
@@ -855,6 +855,9 @@ ul.sdt_menu li div.sdt_box a{
 }
 ul.sdt_menu li div.sdt_box a:first-child{
 	margin-top:15px;
+}
+ul.sdt_menu li div.sdt_box a:last-child {
+    margin-bottom: 15px;
 }
 ul.sdt_menu li div.sdt_box a:hover{
 	color:#fff;
