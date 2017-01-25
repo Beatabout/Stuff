@@ -1,0 +1,30 @@
+<modification>
+	<name>ForMyTheme</name>
+	<version>1.0.0</version>
+	<link>http://nosite</link>
+	<author>Mark Pulman</author>
+    <code>ForMyTheme</code>
+    <!-- Thumbnails for menu -->
+    <file path="catalog/controller/common/header.php">
+        <operation>
+			<search><![CDATA[
+                $this->load->model('extension/extension');
+                ]]>
+            </search>
+			<add position="after"><![CDATA[
+                $this->load->model('tool/image');
+                ]]>
+            </add>
+		</operation>
+        <operation>
+            <search><![CDATA[
+                'name'     => $category['name'],
+                ]]>
+            </search>
+            <add position="after"><![CDATA[
+                'thumb'     => './image/'.$category['image'],
+                ]]>
+            </add>
+        </operation>
+    </file>	
+</modification>
